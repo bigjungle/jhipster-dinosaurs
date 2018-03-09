@@ -42,6 +42,9 @@ public class CacheConfiguration {
             cm.createCache(com.rj.dinosaurs.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(com.rj.dinosaurs.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.rj.dinosaurs.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(com.rj.dinosaurs.domain.Era.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rj.dinosaurs.domain.Clade.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rj.dinosaurs.domain.Dinosaur.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
