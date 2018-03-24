@@ -1,7 +1,7 @@
 version: '2'
 services:
     dinosaurs-app:
-        image: dinosaurs
+        image: johnchase/dinosaurs
         environment:
             - SPRING_PROFILES_ACTIVE=prod,swagger
             - SPRING_DATASOURCE_URL=jdbc:mysql://dinosaurs-mysql:3306/dinosaurs?useUnicode=true&characterEncoding=utf8&useSSL=false
