@@ -33,6 +33,14 @@
     ],
     "jhiPrefix": "jhi",
     "enableTranslation": false,
-    "herokuDeployType": "jar"
+    "herokuDeployType": "jar",
+    "appsFolders": [
+      "jhipster-dinosaurs"
+    ],
+    "directoryPath": "../",
+    "dockerRepositoryName": "johnchase",
+    "dockerPushCommand": "docker push",
+    "kubernetesNamespace": "default",
+    "kubernetesServiceType": "LoadBalancer"
   }
 }

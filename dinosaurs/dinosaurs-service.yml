@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dinosaurs
+  namespace: default
+  labels:
+    app: dinosaurs
+spec:
+  selector:
+    app: dinosaurs
+  type: LoadBalancer
+  ports:
+  - name: web
+    port: 8080
