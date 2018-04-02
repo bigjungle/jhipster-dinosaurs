@@ -16,6 +16,11 @@ spec:
       containers:
       - name: mysql
         image: mysql:5.7.20
+        args:
+        - --lower-case-table-names=1
+        - --skip-ssl
+        - --character-set-server=utf8
+        - --explicit-defaults-for-timestamp
         env:
         - name: MYSQL_USER
           value: root
@@ -23,10 +28,6 @@ spec:
           value: 'yes'
         - name: MYSQL_DATABASE
           value: dinosaurs
-#        command:
-#        - mysqld
-#        - --lower_case_table_names=1
-#        - --skip-ssl
         ports:
         - containerPort: 3306
         volumeMounts:
