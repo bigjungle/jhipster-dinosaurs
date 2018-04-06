@@ -3,7 +3,7 @@
     "promptValues": {
       "packageName": "com.rj.dinosaurs"
     },
-    "jhipsterVersion": "4.14.1",
+    "jhipsterVersion": "4.14.2",
     "baseName": "dinosaurs",
     "packageName": "com.rj.dinosaurs",
     "packageFolder": "com/rj/dinosaurs",
