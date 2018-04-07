@@ -51,9 +51,9 @@ The Cloud Foundry deployment can be found at: [http://pivotal.dinosaurs.digital]
 
 The deployment was created and deployed using the following commands:
 
-    jhipster cloudfoundry  (Database: cleardb, Plan: spark)
+    jhipster cloudfoundry  (Database: cleardb, Plan: spark; the resulting manifest was saved for future deployments)
     mvn package -Pprod-DskipTests
-    cf push -f ./deploy/cloudfoundry/manifest.yml -t 120 -p target/dinosaurs.war
+    cf push -f ./src/main/cloudfoundry/manifest.yml -t 120 -p target/dinosaurs.war
 
 ## Docker
 
