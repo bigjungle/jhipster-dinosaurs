@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: dinosaurs-app
-        image: johnchase/dinosaurs
+        image: johnchase/dinosaurs:0.0.2-SNAPSHOT
         imagePullPolicy: IfNotPresent
         env:
         - name: SPRING_PROFILES_ACTIVE
