@@ -38,11 +38,11 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="insert_dt" type="timestamp">
+            <column name="insert_dt" type="timestamp" defaultValueDate="${now}">
                 <constraints nullable="false" />
             </column>
 
-            <column name="modified_dt" type="timestamp">
+            <column name="modified_dt" type="timestamp" defaultValueDate="${now}">
                 <constraints nullable="false" />
             </column>
 
@@ -56,6 +56,15 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/dinosaur.csv"
+                  separator=";"
+                  tableName="dinosaur">
+            <column name="insert_dt" type="timestamp"/>
+            <column name="modified_dt" type="timestamp"/>
+        </loadData>
+
         <dropDefaultValue tableName="dinosaur" columnName="insert_dt" columnDataType="datetime"/>
         <dropDefaultValue tableName="dinosaur" columnName="modified_dt" columnDataType="datetime"/>
         
