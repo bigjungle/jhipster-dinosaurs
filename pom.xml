@@ -4,7 +4,7 @@
 
     <groupId>com.rj.dinosaurs</groupId>
     <artifactId>dinosaurs</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Dinosaurs</name>
 
@@ -29,10 +29,10 @@
         <profile.swagger />
 
         <!-- Dependency versions -->
-        <jhipster-dependencies.version>0.1.10</jhipster-dependencies.version>
+        <jhipster-dependencies.version>0.1.13</jhipster-dependencies.version>
         <!-- The spring-boot version should match the one managed by
         https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
-        <spring-boot.version>1.5.11.RELEASE</spring-boot.version>
+        <spring-boot.version>1.5.14.RELEASE</spring-boot.version>
         <!-- The hibernate version should match the one managed by
         https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
         <hibernate.version>5.2.12.Final</hibernate.version>
@@ -41,7 +41,7 @@
         <javassist.version>3.20.0-GA</javassist.version>
         <!-- The liquibase version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
-        <liquibase.version>3.5.3</liquibase.version>
+        <liquibase.version>3.5.5</liquibase.version>
         <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
         <validation-api.version>1.1.0.Final</validation-api.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
@@ -338,18 +338,6 @@
             <artifactId>cucumber-spring</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-localconfig-connector</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-heroku-connector</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-cloudfoundry-connector</artifactId>
-        </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
@@ -634,7 +622,6 @@
                 <version>${dockerfile-maven-plugin.version}</version>
                 <!--
                 Uncomment the section below to build the docker image with mvn package and and push it with mvn deploy
-                -->
                 <executions>
                     <execution>
                     <id>default</id>
@@ -644,8 +631,9 @@
                     </goals>
                     </execution>
                 </executions>
+                -->
                 <configuration>
-                    <repository>johnchase/dinosaurs</repository>
+                    <repository>dinosaurs</repository>
                     <tag>latest</tag>
                     <contextDirectory>${project.build.directory}</contextDirectory>
                 </configuration>
@@ -1072,42 +1060,6 @@
                     <version>${mapstruct.version}</version>
                 </dependency>
             </dependencies>
-        </profile>
-        <profile>
-            <id>heroku</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>${maven-clean-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>clean-artifacts</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                                <configuration>
-                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                                    <filesets>
-                                        <fileset>
-                                            <directory>target</directory>
-                                            <excludes>
-                                                <exclude>*.war</exclude>
-                                            </excludes>
-                                            <followSymlinks>false</followSymlinks>
-                                        </fileset>
-                                        <fileset>
-                                            <directory>node_modules</directory>
-                                            <followSymlinks>false</followSymlinks>
-                                        </fileset>
-                                    </filesets>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <!-- jhipster-needle-maven-add-profile -->
     </profiles>
