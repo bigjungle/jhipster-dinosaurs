@@ -1,51 +1,23 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { DinosaursSharedModule } from '../../shared';
+import { DinosaursSharedModule } from 'app/shared';
 import {
-    CladeService,
-    CladePopupService,
     CladeComponent,
     CladeDetailComponent,
-    CladeDialogComponent,
-    CladePopupComponent,
+    CladeUpdateComponent,
     CladeDeletePopupComponent,
     CladeDeleteDialogComponent,
     cladeRoute,
-    cladePopupRoute,
-    CladeResolvePagingParams,
+    cladePopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...cladeRoute,
-    ...cladePopupRoute,
-];
+const ENTITY_STATES = [...cladeRoute, ...cladePopupRoute];
 
 @NgModule({
-    imports: [
-        DinosaursSharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-    ],
-    declarations: [
-        CladeComponent,
-        CladeDetailComponent,
-        CladeDialogComponent,
-        CladeDeleteDialogComponent,
-        CladePopupComponent,
-        CladeDeletePopupComponent,
-    ],
-    entryComponents: [
-        CladeComponent,
-        CladeDialogComponent,
-        CladePopupComponent,
-        CladeDeleteDialogComponent,
-        CladeDeletePopupComponent,
-    ],
-    providers: [
-        CladeService,
-        CladePopupService,
-        CladeResolvePagingParams,
-    ],
+    imports: [DinosaursSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    declarations: [CladeComponent, CladeDetailComponent, CladeUpdateComponent, CladeDeleteDialogComponent, CladeDeletePopupComponent],
+    entryComponents: [CladeComponent, CladeUpdateComponent, CladeDeleteDialogComponent, CladeDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DinosaursCladeModule {}

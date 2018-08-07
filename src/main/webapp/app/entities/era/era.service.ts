@@ -1,74 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { SERVER_API_URL } from '../../app.constants';
+import { Observable } from 'rxjs';
 
-import { Era } from './era.model';
-import { createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IEra } from 'app/shared/model/era.model';
 
-export type EntityResponseType = HttpResponse<Era>;
+type EntityResponseType = HttpResponse<IEra>;
+type EntityArrayResponseType = HttpResponse<IEra[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EraService {
+    private resourceUrl = SERVER_API_URL + 'api/eras';
 
-    private resourceUrl =  SERVER_API_URL + 'api/eras';
+    constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) { }
-
-    create(era: Era): Observable<EntityResponseType> {
-        const copy = this.convert(era);
-        return this.http.post<Era>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+    create(era: IEra): Observable<EntityResponseType> {
+        return this.http.post<IEra>(this.resourceUrl, era, { observe: 'response' });
     }
 
-    update(era: Era): Observable<EntityResponseType> {
-        const copy = this.convert(era);
-        return this.http.put<Era>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+    update(era: IEra): Observable<EntityResponseType> {
+        return this.http.put<IEra>(this.resourceUrl, era, { observe: 'response' });
     }
 
     find(id: number): Observable<EntityResponseType> {
-        return this.http.get<Era>(`${this.resourceUrl}/${id}`, { observe: 'response'})
-            .map((res: EntityResponseType) => this.convertResponse(res));
+        return this.http.get<IEra>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<HttpResponse<Era[]>> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get<Era[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Era[]>) => this.convertArrayResponse(res));
+        return this.http.get<IEra[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
-    }
-
-    private convertResponse(res: EntityResponseType): EntityResponseType {
-        const body: Era = this.convertItemFromServer(res.body);
-        return res.clone({body});
-    }
-
-    private convertArrayResponse(res: HttpResponse<Era[]>): HttpResponse<Era[]> {
-        const jsonResponse: Era[] = res.body;
-        const body: Era[] = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            body.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return res.clone({body});
-    }
-
-    /**
-     * Convert a returned JSON object to Era.
-     */
-    private convertItemFromServer(era: Era): Era {
-        const copy: Era = Object.assign({}, era);
-        return copy;
-    }
-
-    /**
-     * Convert a Era to a JSON which can be sent to the server.
-     */
-    private convert(era: Era): Era {
-        const copy: Era = Object.assign({}, era);
-        return copy;
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

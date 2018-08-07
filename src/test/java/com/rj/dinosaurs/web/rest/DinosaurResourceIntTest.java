@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+
 import static com.rj.dinosaurs.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -65,8 +66,10 @@ public class DinosaurResourceIntTest {
     @Autowired
     private DinosaurRepository dinosaurRepository;
 
+
     @Autowired
     private DinosaurMapper dinosaurMapper;
+    
 
     @Autowired
     private DinosaurService dinosaurService;
@@ -239,6 +242,7 @@ public class DinosaurResourceIntTest {
             .andExpect(jsonPath("$.[*].insertDt").value(hasItem(DEFAULT_INSERT_DT.toString())))
             .andExpect(jsonPath("$.[*].modifiedDt").value(hasItem(DEFAULT_MODIFIED_DT.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -258,7 +262,6 @@ public class DinosaurResourceIntTest {
             .andExpect(jsonPath("$.insertDt").value(DEFAULT_INSERT_DT.toString()))
             .andExpect(jsonPath("$.modifiedDt").value(DEFAULT_MODIFIED_DT.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingDinosaur() throws Exception {
@@ -272,10 +275,11 @@ public class DinosaurResourceIntTest {
     public void updateDinosaur() throws Exception {
         // Initialize the database
         dinosaurRepository.saveAndFlush(dinosaur);
+
         int databaseSizeBeforeUpdate = dinosaurRepository.findAll().size();
 
         // Update the dinosaur
-        Dinosaur updatedDinosaur = dinosaurRepository.findOne(dinosaur.getId());
+        Dinosaur updatedDinosaur = dinosaurRepository.findById(dinosaur.getId()).get();
         // Disconnect from session so that the updates on updatedDinosaur are not directly saved in db
         em.detach(updatedDinosaur);
         updatedDinosaur
@@ -316,11 +320,11 @@ public class DinosaurResourceIntTest {
         restDinosaurMockMvc.perform(put("/api/dinosaurs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(dinosaurDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Dinosaur in the database
         List<Dinosaur> dinosaurList = dinosaurRepository.findAll();
-        assertThat(dinosaurList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(dinosaurList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -328,6 +332,7 @@ public class DinosaurResourceIntTest {
     public void deleteDinosaur() throws Exception {
         // Initialize the database
         dinosaurRepository.saveAndFlush(dinosaur);
+
         int databaseSizeBeforeDelete = dinosaurRepository.findAll().size();
 
         // Get the dinosaur

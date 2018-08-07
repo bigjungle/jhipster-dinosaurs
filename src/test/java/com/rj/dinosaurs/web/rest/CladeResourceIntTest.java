@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
 import static com.rj.dinosaurs.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -47,8 +48,10 @@ public class CladeResourceIntTest {
     @Autowired
     private CladeRepository cladeRepository;
 
+
     @Autowired
     private CladeMapper cladeMapper;
+    
 
     @Autowired
     private CladeService cladeService;
@@ -168,6 +171,7 @@ public class CladeResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(clade.getId().intValue())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -182,7 +186,6 @@ public class CladeResourceIntTest {
             .andExpect(jsonPath("$.id").value(clade.getId().intValue()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingClade() throws Exception {
@@ -196,10 +199,11 @@ public class CladeResourceIntTest {
     public void updateClade() throws Exception {
         // Initialize the database
         cladeRepository.saveAndFlush(clade);
+
         int databaseSizeBeforeUpdate = cladeRepository.findAll().size();
 
         // Update the clade
-        Clade updatedClade = cladeRepository.findOne(clade.getId());
+        Clade updatedClade = cladeRepository.findById(clade.getId()).get();
         // Disconnect from session so that the updates on updatedClade are not directly saved in db
         em.detach(updatedClade);
         updatedClade
@@ -230,11 +234,11 @@ public class CladeResourceIntTest {
         restCladeMockMvc.perform(put("/api/clades")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(cladeDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Clade in the database
         List<Clade> cladeList = cladeRepository.findAll();
-        assertThat(cladeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(cladeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -242,6 +246,7 @@ public class CladeResourceIntTest {
     public void deleteClade() throws Exception {
         // Initialize the database
         cladeRepository.saveAndFlush(clade);
+
         int databaseSizeBeforeDelete = cladeRepository.findAll().size();
 
         // Get the clade

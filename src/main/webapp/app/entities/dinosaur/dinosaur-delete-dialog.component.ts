@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Dinosaur } from './dinosaur.model';
-import { DinosaurPopupService } from './dinosaur-popup.service';
+import { IDinosaur } from 'app/shared/model/dinosaur.model';
 import { DinosaurService } from './dinosaur.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { DinosaurService } from './dinosaur.service';
     templateUrl: './dinosaur-delete-dialog.component.html'
 })
 export class DinosaurDeleteDialogComponent {
+    dinosaur: IDinosaur;
 
-    dinosaur: Dinosaur;
-
-    constructor(
-        private dinosaurService: DinosaurService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private dinosaurService: DinosaurService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.dinosaurService.delete(id).subscribe((response) => {
+        this.dinosaurService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'dinosaurListModification',
                 content: 'Deleted an dinosaur'
@@ -43,22 +36,30 @@ export class DinosaurDeleteDialogComponent {
     template: ''
 })
 export class DinosaurDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private dinosaurPopupService: DinosaurPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.dinosaurPopupService
-                .open(DinosaurDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ dinosaur }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(DinosaurDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.dinosaur = dinosaur;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }

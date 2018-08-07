@@ -74,7 +74,7 @@ public class CladeResource {
     public ResponseEntity<CladeDTO> updateClade(@Valid @RequestBody CladeDTO cladeDTO) throws URISyntaxException {
         log.debug("REST request to update Clade : {}", cladeDTO);
         if (cladeDTO.getId() == null) {
-            return createClade(cladeDTO);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CladeDTO result = cladeService.save(cladeDTO);
         return ResponseEntity.ok()
@@ -107,8 +107,8 @@ public class CladeResource {
     @Timed
     public ResponseEntity<CladeDTO> getClade(@PathVariable Long id) {
         log.debug("REST request to get Clade : {}", id);
-        CladeDTO cladeDTO = cladeService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(cladeDTO));
+        Optional<CladeDTO> cladeDTO = cladeService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(cladeDTO);
     }
 
     /**

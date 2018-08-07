@@ -1,21 +1,22 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { Era } from './era.model';
+import { IEra } from 'app/shared/model/era.model';
+import { Principal } from 'app/core';
+
+import { ITEMS_PER_PAGE } from 'app/shared';
 import { EraService } from './era.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-era',
     templateUrl: './era.component.html'
 })
 export class EraComponent implements OnInit, OnDestroy {
-
-currentAccount: any;
-    eras: Era[];
+    currentAccount: any;
+    eras: IEra[];
     error: any;
     success: any;
     eventSubscriber: Subscription;
@@ -39,7 +40,7 @@ currentAccount: any;
         private eventManager: JhiEventManager
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe((data) => {
+        this.routeData = this.activatedRoute.data.subscribe(data => {
             this.page = data.pagingParams.page;
             this.previousPage = data.pagingParams.page;
             this.reverse = data.pagingParams.ascending;
@@ -48,23 +49,28 @@ currentAccount: any;
     }
 
     loadAll() {
-        this.eraService.query({
-            page: this.page - 1,
-            size: this.itemsPerPage,
-            sort: this.sort()}).subscribe(
-                (res: HttpResponse<Era[]>) => this.onSuccess(res.body, res.headers),
+        this.eraService
+            .query({
+                page: this.page - 1,
+                size: this.itemsPerPage,
+                sort: this.sort()
+            })
+            .subscribe(
+                (res: HttpResponse<IEra[]>) => this.paginateEras(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
-        );
+            );
     }
+
     loadPage(page: number) {
         if (page !== this.previousPage) {
             this.previousPage = page;
             this.transition();
         }
     }
+
     transition() {
-        this.router.navigate(['/era'], {queryParams:
-            {
+        this.router.navigate(['/era'], {
+            queryParams: {
                 page: this.page,
                 size: this.itemsPerPage,
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
@@ -75,15 +81,19 @@ currentAccount: any;
 
     clear() {
         this.page = 0;
-        this.router.navigate(['/era', {
-            page: this.page,
-            sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-        }]);
+        this.router.navigate([
+            '/era',
+            {
+                page: this.page,
+                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+            }
+        ]);
         this.loadAll();
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEras();
@@ -93,11 +103,12 @@ currentAccount: any;
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: Era) {
+    trackId(index: number, item: IEra) {
         return item.id;
     }
+
     registerChangeInEras() {
-        this.eventSubscriber = this.eventManager.subscribe('eraListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('eraListModification', response => this.loadAll());
     }
 
     sort() {
@@ -108,14 +119,14 @@ currentAccount: any;
         return result;
     }
 
-    private onSuccess(data, headers) {
+    private paginateEras(data: IEra[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = headers.get('X-Total-Count');
+        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
-        // this.page = pagingParams.page;
         this.eras = data;
     }
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }

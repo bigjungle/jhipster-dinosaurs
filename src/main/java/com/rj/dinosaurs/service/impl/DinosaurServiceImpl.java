@@ -7,12 +7,14 @@ import com.rj.dinosaurs.service.dto.DinosaurDTO;
 import com.rj.dinosaurs.service.mapper.DinosaurMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Optional;
 /**
  * Service Implementation for managing Dinosaur.
  */
@@ -59,6 +61,7 @@ public class DinosaurServiceImpl implements DinosaurService {
             .map(dinosaurMapper::toDto);
     }
 
+
     /**
      * Get one dinosaur by id.
      *
@@ -67,10 +70,10 @@ public class DinosaurServiceImpl implements DinosaurService {
      */
     @Override
     @Transactional(readOnly = true)
-    public DinosaurDTO findOne(Long id) {
+    public Optional<DinosaurDTO> findOne(Long id) {
         log.debug("Request to get Dinosaur : {}", id);
-        Dinosaur dinosaur = dinosaurRepository.findOne(id);
-        return dinosaurMapper.toDto(dinosaur);
+        return dinosaurRepository.findById(id)
+            .map(dinosaurMapper::toDto);
     }
 
     /**
@@ -81,6 +84,6 @@ public class DinosaurServiceImpl implements DinosaurService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Dinosaur : {}", id);
-        dinosaurRepository.delete(id);
+        dinosaurRepository.deleteById(id);
     }
 }

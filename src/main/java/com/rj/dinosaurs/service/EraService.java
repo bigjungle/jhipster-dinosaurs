@@ -1,8 +1,11 @@
 package com.rj.dinosaurs.service;
 
 import com.rj.dinosaurs.service.dto.EraDTO;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 /**
  * Service Interface for managing Era.
@@ -25,13 +28,14 @@ public interface EraService {
      */
     Page<EraDTO> findAll(Pageable pageable);
 
+
     /**
      * Get the "id" era.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    EraDTO findOne(Long id);
+    Optional<EraDTO> findOne(Long id);
 
     /**
      * Delete the "id" era.

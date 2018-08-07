@@ -6,26 +6,25 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DinosaursTestModule } from '../../../test.module';
 import { EraComponent } from '../../../../../../main/webapp/app/entities/era/era.component';
 import { EraService } from '../../../../../../main/webapp/app/entities/era/era.service';
-import { Era } from '../../../../../../main/webapp/app/entities/era/era.model';
+import { Era } from '../../../../../../main/webapp/app/shared/model/era.model';
 
 describe('Component Tests', () => {
-
     describe('Era Management Component', () => {
         let comp: EraComponent;
         let fixture: ComponentFixture<EraComponent>;
         let service: EraService;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [DinosaursTestModule],
-                declarations: [EraComponent],
-                providers: [
-                    EraService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [DinosaursTestModule],
+                    declarations: [EraComponent],
+                    providers: [EraService]
+                })
+                    .overrideTemplate(EraComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(EraComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(EraComponent);
@@ -37,19 +36,22 @@ describe('Component Tests', () => {
             it('Should call load all on init', () => {
                 // GIVEN
                 const headers = new HttpHeaders().append('link', 'link;link');
-                spyOn(service, 'query').and.returnValue(Observable.of(new HttpResponse({
-                    body: [new Era(123)],
-                    headers
-                })));
+                spyOn(service, 'query').and.returnValue(
+                    Observable.of(
+                        new HttpResponse({
+                            body: [new Era(123)],
+                            headers
+                        })
+                    )
+                );
 
                 // WHEN
                 comp.ngOnInit();
 
                 // THEN
                 expect(service.query).toHaveBeenCalled();
-                expect(comp.eras[0]).toEqual(jasmine.objectContaining({id: 123}));
+                expect(comp.eras[0]).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

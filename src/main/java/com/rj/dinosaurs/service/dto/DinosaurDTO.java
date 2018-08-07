@@ -1,11 +1,8 @@
 package com.rj.dinosaurs.service.dto;
 
-
 import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 import com.rj.dinosaurs.domain.enumeration.Diet;
 
@@ -142,7 +139,7 @@ public class DinosaurDTO implements Serializable {
         }
 
         DinosaurDTO dinosaurDTO = (DinosaurDTO) o;
-        if(dinosaurDTO.getId() == null || getId() == null) {
+        if (dinosaurDTO.getId() == null || getId() == null) {
             return false;
         }
         return Objects.equals(getId(), dinosaurDTO.getId());
@@ -163,6 +160,10 @@ public class DinosaurDTO implements Serializable {
             ", diet='" + getDiet() + "'" +
             ", insertDt='" + getInsertDt() + "'" +
             ", modifiedDt='" + getModifiedDt() + "'" +
+            ", era=" + getEraId() +
+            ", era='" + getEraName() + "'" +
+            ", clade=" + getCladeId() +
+            ", clade='" + getCladeDescription() + "'" +
             "}";
     }
 }

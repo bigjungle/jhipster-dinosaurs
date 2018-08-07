@@ -1,8 +1,11 @@
 package com.rj.dinosaurs.service;
 
 import com.rj.dinosaurs.service.dto.CladeDTO;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 /**
  * Service Interface for managing Clade.
@@ -25,13 +28,14 @@ public interface CladeService {
      */
     Page<CladeDTO> findAll(Pageable pageable);
 
+
     /**
      * Get the "id" clade.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    CladeDTO findOne(Long id);
+    Optional<CladeDTO> findOne(Long id);
 
     /**
      * Delete the "id" clade.

@@ -1,49 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { DinosaursSharedModule } from '../../shared';
+import { DinosaursSharedModule } from 'app/shared';
 import {
-    DinosaurService,
-    DinosaurPopupService,
     DinosaurComponent,
     DinosaurDetailComponent,
-    DinosaurDialogComponent,
-    DinosaurPopupComponent,
+    DinosaurUpdateComponent,
     DinosaurDeletePopupComponent,
     DinosaurDeleteDialogComponent,
     dinosaurRoute,
-    dinosaurPopupRoute,
+    dinosaurPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...dinosaurRoute,
-    ...dinosaurPopupRoute,
-];
+const ENTITY_STATES = [...dinosaurRoute, ...dinosaurPopupRoute];
 
 @NgModule({
-    imports: [
-        DinosaursSharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-    ],
+    imports: [DinosaursSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         DinosaurComponent,
         DinosaurDetailComponent,
-        DinosaurDialogComponent,
+        DinosaurUpdateComponent,
         DinosaurDeleteDialogComponent,
-        DinosaurPopupComponent,
-        DinosaurDeletePopupComponent,
+        DinosaurDeletePopupComponent
     ],
-    entryComponents: [
-        DinosaurComponent,
-        DinosaurDialogComponent,
-        DinosaurPopupComponent,
-        DinosaurDeleteDialogComponent,
-        DinosaurDeletePopupComponent,
-    ],
-    providers: [
-        DinosaurService,
-        DinosaurPopupService,
-    ],
+    entryComponents: [DinosaurComponent, DinosaurUpdateComponent, DinosaurDeleteDialogComponent, DinosaurDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DinosaursDinosaurModule {}

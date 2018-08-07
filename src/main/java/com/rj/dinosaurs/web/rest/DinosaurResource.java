@@ -74,7 +74,7 @@ public class DinosaurResource {
     public ResponseEntity<DinosaurDTO> updateDinosaur(@Valid @RequestBody DinosaurDTO dinosaurDTO) throws URISyntaxException {
         log.debug("REST request to update Dinosaur : {}", dinosaurDTO);
         if (dinosaurDTO.getId() == null) {
-            return createDinosaur(dinosaurDTO);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         DinosaurDTO result = dinosaurService.save(dinosaurDTO);
         return ResponseEntity.ok()
@@ -107,8 +107,8 @@ public class DinosaurResource {
     @Timed
     public ResponseEntity<DinosaurDTO> getDinosaur(@PathVariable Long id) {
         log.debug("REST request to get Dinosaur : {}", id);
-        DinosaurDTO dinosaurDTO = dinosaurService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(dinosaurDTO));
+        Optional<DinosaurDTO> dinosaurDTO = dinosaurService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(dinosaurDTO);
     }
 
     /**

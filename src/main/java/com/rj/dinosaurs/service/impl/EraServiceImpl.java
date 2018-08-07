@@ -7,12 +7,14 @@ import com.rj.dinosaurs.service.dto.EraDTO;
 import com.rj.dinosaurs.service.mapper.EraMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Optional;
 /**
  * Service Implementation for managing Era.
  */
@@ -59,6 +61,7 @@ public class EraServiceImpl implements EraService {
             .map(eraMapper::toDto);
     }
 
+
     /**
      * Get one era by id.
      *
@@ -67,10 +70,10 @@ public class EraServiceImpl implements EraService {
      */
     @Override
     @Transactional(readOnly = true)
-    public EraDTO findOne(Long id) {
+    public Optional<EraDTO> findOne(Long id) {
         log.debug("Request to get Era : {}", id);
-        Era era = eraRepository.findOne(id);
-        return eraMapper.toDto(era);
+        return eraRepository.findById(id)
+            .map(eraMapper::toDto);
     }
 
     /**
@@ -81,6 +84,6 @@ public class EraServiceImpl implements EraService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Era : {}", id);
-        eraRepository.delete(id);
+        eraRepository.deleteById(id);
     }
 }

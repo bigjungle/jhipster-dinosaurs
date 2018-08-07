@@ -7,12 +7,14 @@ import com.rj.dinosaurs.service.dto.CladeDTO;
 import com.rj.dinosaurs.service.mapper.CladeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Optional;
 /**
  * Service Implementation for managing Clade.
  */
@@ -59,6 +61,7 @@ public class CladeServiceImpl implements CladeService {
             .map(cladeMapper::toDto);
     }
 
+
     /**
      * Get one clade by id.
      *
@@ -67,10 +70,10 @@ public class CladeServiceImpl implements CladeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public CladeDTO findOne(Long id) {
+    public Optional<CladeDTO> findOne(Long id) {
         log.debug("Request to get Clade : {}", id);
-        Clade clade = cladeRepository.findOne(id);
-        return cladeMapper.toDto(clade);
+        return cladeRepository.findById(id)
+            .map(cladeMapper::toDto);
     }
 
     /**
@@ -81,6 +84,6 @@ public class CladeServiceImpl implements CladeService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Clade : {}", id);
-        cladeRepository.delete(id);
+        cladeRepository.deleteById(id);
     }
 }

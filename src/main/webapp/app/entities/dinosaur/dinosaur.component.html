@@ -1,36 +1,34 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span>Dinosaurs</span>
-        <button class="btn btn-primary float-right jh-create-entity create-dinosaur" [routerLink]="['/', { outlets: { popup: ['dinosaur-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-dinosaur" [routerLink]="['/dinosaur/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span >
             Create new Dinosaur
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-    </div>
     <br/>
     <div class="table-responsive" *ngIf="dinosaurs">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="name"><span>Name</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="weight"><span>Weight</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="length"><span>Length</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="diet"><span>Diet</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="insertDt"><span>Insert Dt</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="modifiedDt"><span>Modified Dt</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="eraName"><span>Era</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="cladeDescription"><span>Clade</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="weight"><span>Weight</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="length"><span>Length</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="diet"><span>Diet</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="insertDt"><span>Insert Dt</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="modifiedDt"><span>Modified Dt</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="eraName"><span>Era</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="cladeDescription"><span>Clade</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let dinosaur of dinosaurs ;trackBy: trackId">
-                <td><a [routerLink]="['../dinosaur', dinosaur.id ]">{{dinosaur.id}}</a></td>
+                <td><a [routerLink]="['/dinosaur', dinosaur.id, 'view' ]">{{dinosaur.id}}</a></td>
                 <td>{{dinosaur.name}}</td>
                 <td>{{dinosaur.weight}}</td>
                 <td>{{dinosaur.length}}</td>
@@ -39,28 +37,26 @@
                 <td>{{dinosaur.modifiedDt | date:'medium'}}</td>
                 <td>
                     <div *ngIf="dinosaur.eraId">
-                        <a [routerLink]="['../era', dinosaur.eraId  ]" >{{dinosaur.eraName}}</a>
+                        <a [routerLink]="['../era', dinosaur.eraId , 'view' ]" >{{dinosaur.eraName}}</a>
                     </div>
                 </td>
                 <td>
                     <div *ngIf="dinosaur.cladeId">
-                        <a [routerLink]="['../clade', dinosaur.cladeId  ]" >{{dinosaur.cladeDescription}}</a>
+                        <a [routerLink]="['../clade', dinosaur.cladeId , 'view' ]" >{{dinosaur.cladeDescription}}</a>
                     </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['../dinosaur', dinosaur.id ]"
+                                [routerLink]="['/dinosaur', dinosaur.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'dinosaur/'+ dinosaur.id + '/edit'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
+                                [routerLink]="['/dinosaur', dinosaur.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
@@ -68,7 +64,7 @@
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>
                         </button>
                     </div>

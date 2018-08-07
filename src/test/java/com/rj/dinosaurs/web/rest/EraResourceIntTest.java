@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
 import static com.rj.dinosaurs.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -53,8 +54,10 @@ public class EraResourceIntTest {
     @Autowired
     private EraRepository eraRepository;
 
+
     @Autowired
     private EraMapper eraMapper;
+    
 
     @Autowired
     private EraService eraService;
@@ -180,6 +183,7 @@ public class EraResourceIntTest {
             .andExpect(jsonPath("$.[*].fromMa").value(hasItem(DEFAULT_FROM_MA)))
             .andExpect(jsonPath("$.[*].toMa").value(hasItem(DEFAULT_TO_MA)));
     }
+    
 
     @Test
     @Transactional
@@ -196,7 +200,6 @@ public class EraResourceIntTest {
             .andExpect(jsonPath("$.fromMa").value(DEFAULT_FROM_MA))
             .andExpect(jsonPath("$.toMa").value(DEFAULT_TO_MA));
     }
-
     @Test
     @Transactional
     public void getNonExistingEra() throws Exception {
@@ -210,10 +213,11 @@ public class EraResourceIntTest {
     public void updateEra() throws Exception {
         // Initialize the database
         eraRepository.saveAndFlush(era);
+
         int databaseSizeBeforeUpdate = eraRepository.findAll().size();
 
         // Update the era
-        Era updatedEra = eraRepository.findOne(era.getId());
+        Era updatedEra = eraRepository.findById(era.getId()).get();
         // Disconnect from session so that the updates on updatedEra are not directly saved in db
         em.detach(updatedEra);
         updatedEra
@@ -248,11 +252,11 @@ public class EraResourceIntTest {
         restEraMockMvc.perform(put("/api/eras")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(eraDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Era in the database
         List<Era> eraList = eraRepository.findAll();
-        assertThat(eraList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(eraList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -260,6 +264,7 @@ public class EraResourceIntTest {
     public void deleteEra() throws Exception {
         // Initialize the database
         eraRepository.saveAndFlush(era);
+
         int databaseSizeBeforeDelete = eraRepository.findAll().size();
 
         // Get the era

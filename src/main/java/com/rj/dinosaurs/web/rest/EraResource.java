@@ -74,7 +74,7 @@ public class EraResource {
     public ResponseEntity<EraDTO> updateEra(@Valid @RequestBody EraDTO eraDTO) throws URISyntaxException {
         log.debug("REST request to update Era : {}", eraDTO);
         if (eraDTO.getId() == null) {
-            return createEra(eraDTO);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EraDTO result = eraService.save(eraDTO);
         return ResponseEntity.ok()
@@ -107,8 +107,8 @@ public class EraResource {
     @Timed
     public ResponseEntity<EraDTO> getEra(@PathVariable Long id) {
         log.debug("REST request to get Era : {}", id);
-        EraDTO eraDTO = eraService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(eraDTO));
+        Optional<EraDTO> eraDTO = eraService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(eraDTO);
     }
 
     /**

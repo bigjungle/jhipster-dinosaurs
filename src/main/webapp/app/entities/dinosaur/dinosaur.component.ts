@@ -1,19 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs/Subscription';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { Dinosaur } from './dinosaur.model';
+import { IDinosaur } from 'app/shared/model/dinosaur.model';
+import { Principal } from 'app/core';
+
+import { ITEMS_PER_PAGE } from 'app/shared';
 import { DinosaurService } from './dinosaur.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-dinosaur',
     templateUrl: './dinosaur.component.html'
 })
 export class DinosaurComponent implements OnInit, OnDestroy {
-
-    dinosaurs: Dinosaur[];
+    dinosaurs: IDinosaur[];
     currentAccount: any;
     eventSubscriber: Subscription;
     itemsPerPage: number;
@@ -42,14 +43,16 @@ export class DinosaurComponent implements OnInit, OnDestroy {
     }
 
     loadAll() {
-        this.dinosaurService.query({
-            page: this.page,
-            size: this.itemsPerPage,
-            sort: this.sort()
-        }).subscribe(
-            (res: HttpResponse<Dinosaur[]>) => this.onSuccess(res.body, res.headers),
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+        this.dinosaurService
+            .query({
+                page: this.page,
+                size: this.itemsPerPage,
+                sort: this.sort()
+            })
+            .subscribe(
+                (res: HttpResponse<IDinosaur[]>) => this.paginateDinosaurs(res.body, res.headers),
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
     }
 
     reset() {
@@ -62,9 +65,10 @@ export class DinosaurComponent implements OnInit, OnDestroy {
         this.page = page;
         this.loadAll();
     }
+
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInDinosaurs();
@@ -74,11 +78,12 @@ export class DinosaurComponent implements OnInit, OnDestroy {
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: Dinosaur) {
+    trackId(index: number, item: IDinosaur) {
         return item.id;
     }
+
     registerChangeInDinosaurs() {
-        this.eventSubscriber = this.eventManager.subscribe('dinosaurListModification', (response) => this.reset());
+        this.eventSubscriber = this.eventManager.subscribe('dinosaurListModification', response => this.reset());
     }
 
     sort() {
@@ -89,15 +94,15 @@ export class DinosaurComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    private onSuccess(data, headers) {
+    private paginateDinosaurs(data: IDinosaur[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = headers.get('X-Total-Count');
+        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         for (let i = 0; i < data.length; i++) {
             this.dinosaurs.push(data[i]);
         }
     }
 
-    private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
     }
 }
