@@ -37,7 +37,7 @@ The source for the dinosaurs jdl can be found in the [RatJuggler/jhipster-jdl](h
 
 ## Heroku
 
-The Heroku deployment can be found at: [https://heroku.dinosaurs.digital](https://heroku.dinosaurs.digital)
+The Heroku deployment can be found at: [https://jhipster-dinosaurs.herokuapp.com](https://jhipster-dinosaurs.herokuapp.com)
 
 The deployment was created and deployed using the following commands:
 
@@ -47,7 +47,7 @@ The deployment was created and deployed using the following commands:
 
 ## Pivotal (Cloud Foundry)
 
-The Cloud Foundry deployment can be found at: [http://pivotal.dinosaurs.digital](http://pivotal.dinosaurs.digital)
+A Cloud Foundry deployment was tested but is no longer available.
 
 The deployment was created and deployed using the following commands:
 
